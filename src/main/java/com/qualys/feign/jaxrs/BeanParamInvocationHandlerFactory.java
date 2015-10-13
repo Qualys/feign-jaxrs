@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by sskrla on 10/12/15.
  */
-public class BeanParamInvocationHandlerFactory implements InvocationHandlerFactory {
+class BeanParamInvocationHandlerFactory implements InvocationHandlerFactory {
     final InvocationHandlerFactory delegate;
     final BeanParamTransformerFactory factory = new BeanParamTransformerFactory();
 

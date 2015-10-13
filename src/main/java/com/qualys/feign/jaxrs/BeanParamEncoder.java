@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Created by sskrla on 10/12/15.
  */
-public class BeanParamEncoder implements Encoder {
+class BeanParamEncoder implements Encoder {
     final static ThreadLocal<EncoderContext> CTX = new ThreadLocal<>();
 
     final Encoder delegate;

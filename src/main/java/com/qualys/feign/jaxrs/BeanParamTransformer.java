@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Created by sskrla on 10/7/15.
  */
-public class BeanParamTransformer implements Param.Expander {
+class BeanParamTransformer implements Param.Expander {
     final String[][] names;
     final Multimap<Class<?>, String> params;
     final Field[] fields;

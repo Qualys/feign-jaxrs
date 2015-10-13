@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by sskrla on 10/7/15.
  */
-public final class ReflectionUtil {
+final class ReflectionUtil {
   private ReflectionUtil() { }
 
   /**

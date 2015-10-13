@@ -46,7 +46,7 @@ import static java.lang.String.format;
 /**
  * Created by sskrla on 10/13/15.
  */
-public class BeanParamTransformerFactory {
+class BeanParamTransformerFactory {
     Multimap<String, Annotation> getNames(Annotation[] annotations) {
         ImmutableMultimap.Builder<String, Annotation> names = ImmutableMultimap.builder();
         for(Annotation annotation: annotations) {
