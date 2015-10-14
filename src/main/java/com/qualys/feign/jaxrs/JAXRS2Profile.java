@@ -29,7 +29,7 @@ import feign.jaxrs.JAXRSContract;
 public class JAXRS2Profile extends Feign.Builder {
     JAXRS2Profile() {
         encoder(new Encoder.Default());
-        invocationHandlerFactory(new BeanParamInvocationHandlerFactory());
+        invocationHandlerFactory(new InvocationHandlerFactory.Default());
         contract(new JAXRSContract());
     }
 
