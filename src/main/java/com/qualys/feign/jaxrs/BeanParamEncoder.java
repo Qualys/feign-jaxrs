@@ -30,8 +30,6 @@ import java.util.Map;
  * Created by sskrla on 10/12/15.
  */
 class BeanParamEncoder implements Encoder {
-    final static ThreadLocal<EncoderContext> CTX = new ThreadLocal<>();
-
     final Encoder delegate;
 
     public BeanParamEncoder() {
@@ -43,8 +41,8 @@ class BeanParamEncoder implements Encoder {
     }
 
     public void encode(Object object, Type bodyType, RequestTemplate template) throws EncodeException {
-        EncoderContext ctx = CTX.get();
-        if(ctx != null) {
+        if(object instanceof EncoderContext) {
+            EncoderContext ctx = (EncoderContext) object;
             for(String name: ctx.queryParams)
                 template.query(name, "{" + name + "}");
 
@@ -55,33 +53,6 @@ class BeanParamEncoder implements Encoder {
 
         } else {
             this.delegate.encode(object, bodyType, template);
-        }
-    }
-
-    public static void setContext(EncoderContext ctx) {
-        CTX.set(ctx);
-    }
-
-    public static void clearContext() {
-        CTX.remove();
-    }
-
-    public static class EncoderContext {
-        final Map<String, Object> values;
-        final Collection<String> formParams;
-        final Collection<String> queryParams;
-        final Collection<String> headerParams;
-
-        EncoderContext(
-                Map<String, Object> values,
-                Collection<String> formParams,
-                Collection<String> queryParams,
-                Collection<String> headerParams) {
-
-            this.values = values;
-            this.formParams = formParams;
-            this.queryParams = queryParams;
-            this.headerParams = headerParams;
         }
     }
 }

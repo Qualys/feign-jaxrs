@@ -86,18 +86,13 @@ class BeanParamInvocationHandlerFactory implements InvocationHandlerFactory {
         }
 
         public Object invoke(Object[] argv) throws Throwable {
-            try {
-                Map<String, Object> params = transformer.transform(argv);
-                BeanParamEncoder.setContext(new BeanParamEncoder.EncoderContext(
-                    params,
-                    transformer.formParams(),
-                    transformer.queryParams(),
-                    transformer.headerParams()));
-                return delegate.invoke(argv);
-
-            } finally {
-                BeanParamEncoder.clearContext();
-            }
+            Map<String, Object> params = transformer.transform(argv);
+            argv[paramIndex] = new EncoderContext(
+                params,
+                transformer.formParams(),
+                transformer.queryParams(),
+                transformer.headerParams());
+            return delegate.invoke(argv);
         }
     }
 }
