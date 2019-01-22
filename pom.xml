@@ -26,6 +26,12 @@
     <artifactId>feign-jaxrs</artifactId>
     <version>1.0</version>
 
+    <parent>
+        <groupId>net.n2oapp.parent</groupId>
+        <artifactId>parent</artifactId>
+        <version>5.0</version>
+    </parent>
+
     <properties>
         <feign.version>8.10.0</feign.version>
     </properties>
