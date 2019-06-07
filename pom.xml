@@ -22,7 +22,7 @@
 
     <groupId>ru.i-novus.components</groupId>
     <artifactId>feign-jaxrs</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <properties>
         <feign.version>8.10.0</feign.version>
