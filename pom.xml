@@ -59,6 +59,17 @@
         <url>https://i-novus.ru/en</url>
     </organization>
 
+    <developers>
+        <developer>
+            <name>Alexander Belov</name>
+            <email>abelov@i-novus.ru</email>
+        </developer>
+        <developer>
+            <name>Rushan Makhmutov</name>
+            <email>rmakhmutov@i-novus.ru</email>
+        </developer>
+    </developers>
+
     <dependencies>
         <dependency>
             <groupId>com.netflix.feign</groupId>
