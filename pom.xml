@@ -22,19 +22,43 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.qualys.feign</groupId>
+    <groupId>ru.i-novus.components</groupId>
     <artifactId>feign-jaxrs</artifactId>
-    <version>1.0</version>
-
-    <parent>
-        <groupId>net.n2oapp.parent</groupId>
-        <artifactId>parent</artifactId>
-        <version>5.0</version>
-    </parent>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <feign.version>8.10.0</feign.version>
+        <maven.javadoc.version>3.1.0</maven.javadoc.version>
+        <maven.source.version>3.0.1</maven.source.version>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     </properties>
+
+    <scm>
+        <connection>scm:git:https://github.com/i-novus-llc/feign-jaxrs.git</connection>
+        <url>https://github.com/i-novus-llc/feign-jaxrs</url>
+        <developerConnection>scm:git:https://github.com/i-novus-llc/feign-jaxrs.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <name>feign-jaxrs</name>
+    <description>Library provides very basic support for JAX-RS 2.0 `@BeanParam`</description>
+    <url>https://git.i-novus.ru/i-novus-llc/feign-jaxrs</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <inceptionYear>2019</inceptionYear>
+
+    <organization>
+        <name>I-Novus LLC</name>
+        <url>https://i-novus.ru/en</url>
+    </organization>
 
     <dependencies>
         <dependency>
@@ -78,6 +102,36 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven.javadoc.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -111,4 +165,52 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
