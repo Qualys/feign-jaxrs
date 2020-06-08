@@ -22,7 +22,7 @@
 
     <groupId>ru.i-novus.components</groupId>
     <artifactId>feign-jaxrs</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>2.0</version>
 
     <properties>
         <feign.version>10.10.1</feign.version>
@@ -36,7 +36,7 @@
         <connection>scm:git:https://github.com/i-novus-llc/feign-jaxrs.git</connection>
         <url>https://github.com/i-novus-llc/feign-jaxrs</url>
         <developerConnection>scm:git:https://github.com/i-novus-llc/feign-jaxrs.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>2.0</tag>
     </scm>
 
     <name>feign-jaxrs</name>
