@@ -21,7 +21,7 @@ import feign.Client
 import feign.Feign
 import feign.Request
 import feign.Response
-import feign.jaxrs.JAXRSContract
+import feign.jaxrs2.JAXRS2Contract
 import spock.lang.Specification
 /**
  * Created by sskrla on 10/12/15.
@@ -31,15 +31,15 @@ class BeanParamTest extends Specification {
     def client = Feign.builder()
         .encoder(new BeanParamEncoder())
         .invocationHandlerFactory(new BeanParamInvocationHandlerFactory())
-        .contract(new JAXRSContract())
+        .contract(new JAXRS2Contract())
         .client(new Client() {
             @Override
             Response execute(Request request, Request.Options options) throws IOException {
                 sent = request
-                Response.create(200, "OK", [:], new byte[0])
+                Response.builder().request(request).status(200).reason("OK").headers([:]).body(new byte[0]).build()
             }
         })
-        .target(QueryResource, "localhost")
+        .target(QueryResource, "http://localhost")
 
     def "query params"() {
         when:
@@ -72,6 +72,6 @@ class BeanParamTest extends Specification {
         client.withPath(new QueryResource.PathBeanParam(id: 42))
 
         then:
-        sent.url() == "localhost/42"
+        sent.url() == "http://localhost/42"
     }
 }

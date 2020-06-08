@@ -23,8 +23,7 @@ import feign.codec.EncodeException;
 import feign.codec.Encoder;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sskrla on 10/12/15.
@@ -40,17 +39,24 @@ class BeanParamEncoder implements Encoder {
         this.delegate = delegate;
     }
 
+    @Override
     public void encode(Object object, Type bodyType, RequestTemplate template) throws EncodeException {
-        if(object instanceof EncoderContext) {
+        if (template.methodMetadata().indexToExpander() == null)
+            template.methodMetadata().indexToExpander(new HashMap<>());
+
+        if (object instanceof EncoderContext) {
             EncoderContext ctx = (EncoderContext) object;
-            for(String name: ctx.queryParams)
+            for (String name : ctx.transformer.queryParams()) {
                 template.query(name, "{" + name + "}");
+            }
+            for (String name : ctx.transformer.headerParams()) {
+                if (ctx.values.get(name) != null)
+                    template.header(name, String.valueOf(ctx.values.get(name)));
+            }
 
-            for(String name: ctx.headerParams)
-                template.header(name, "{" + name + "}");
-
-            template.resolve(ctx.values);
-
+            RequestTemplate resolvedTemplate = template.resolve(ctx.values);
+            template.uri(resolvedTemplate.url());
+            template.headers(resolvedTemplate.headers());
         } else {
             this.delegate.encode(object, bodyType, template);
         }

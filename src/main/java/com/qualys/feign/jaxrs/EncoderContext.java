@@ -18,27 +18,23 @@
 
 package com.qualys.feign.jaxrs;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
  * Created by sskrla on 10/13/15.
  */
 public class EncoderContext {
+    final Integer paramIndex;
+    final BeanParamTransformer transformer;
     final Map<String, Object> values;
-    final Collection<String> formParams;
-    final Collection<String> queryParams;
-    final Collection<String> headerParams;
 
     EncoderContext(
-            Map<String, Object> values,
-            Collection<String> formParams,
-            Collection<String> queryParams,
-            Collection<String> headerParams) {
+            Integer paramIndex,
+            BeanParamTransformer transformer,
+            Map<String, Object> values) {
 
+        this.paramIndex = paramIndex;
+        this.transformer = transformer;
         this.values = values;
-        this.formParams = formParams;
-        this.queryParams = queryParams;
-        this.headerParams = headerParams;
     }
 }

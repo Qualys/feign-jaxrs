@@ -44,16 +44,16 @@ class BeanParamInvocationHandlerFactory implements InvocationHandlerFactory {
     }
 
     public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {
-        Map<Method, MethodHandler> overriddenDispatch = new HashMap<Method, MethodHandler>();
-        for(Map.Entry<Method, MethodHandler> entry: dispatch.entrySet()) {
+        Map<Method, MethodHandler> overriddenDispatch = new HashMap<>();
+        for (Map.Entry<Method, MethodHandler> entry : dispatch.entrySet()) {
             int index = beanParamIndex(entry.getKey());
-            if(index > -1) {
+            if (index > -1) {
                 overriddenDispatch.put(
-                    entry.getKey(),
-                    new BeanParamMethodHandler(
-                        entry.getValue(),
-                        factory.createTransformer(entry.getKey().getParameterTypes()[index], index),
-                        index));
+                        entry.getKey(),
+                        new BeanParamMethodHandler(
+                                entry.getValue(),
+                                factory.createTransformer(entry.getKey().getParameterTypes()[index], index),
+                                index));
             } else {
                 overriddenDispatch.put(entry.getKey(), entry.getValue());
             }
@@ -63,10 +63,10 @@ class BeanParamInvocationHandlerFactory implements InvocationHandlerFactory {
     }
 
     int beanParamIndex(Method method) {
-        Annotation[][] annotations =method.getParameterAnnotations();
-        for(int i=0; i<annotations.length; i++) {
-            for(Annotation annotation: annotations[i]) {
-                if(BeanParam.class.isAssignableFrom(annotation.getClass()))
+        Annotation[][] annotations = method.getParameterAnnotations();
+        for (int i = 0; i < annotations.length; i++) {
+            for (Annotation annotation : annotations[i]) {
+                if (BeanParam.class.isAssignableFrom(annotation.getClass()))
                     return i;
             }
         }
@@ -88,10 +88,9 @@ class BeanParamInvocationHandlerFactory implements InvocationHandlerFactory {
         public Object invoke(Object[] argv) throws Throwable {
             Map<String, Object> params = transformer.transform(argv);
             argv[paramIndex] = new EncoderContext(
-                params,
-                transformer.formParams(),
-                transformer.queryParams(),
-                transformer.headerParams());
+                    paramIndex,
+                    transformer,
+                    params);
             return delegate.invoke(argv);
         }
     }

@@ -27,25 +27,26 @@ import java.util.List;
  * Created by sskrla on 10/7/15.
  */
 final class ReflectionUtil {
-  private ReflectionUtil() { }
-
-  /**
-   * Returns all declared field, including those on superclasses, optionally setting accessible set to true.
-   *
-   * @param cls
-   * @return
-   */
-  public static Field[] getAllDeclaredFields(Class<?> cls, boolean accessible) {
-    List<Field> fields = new ArrayList<Field>();
-    while(cls != null) {
-      fields.addAll(Arrays.asList(cls.getDeclaredFields()));
-      cls = cls.getSuperclass();
+    private ReflectionUtil() {
     }
 
-    if(accessible)
-      for(Field field: fields)
-        field.setAccessible(true);
+    /**
+     * Returns all declared field, including those on superclasses, optionally setting accessible set to true.
+     *
+     * @param cls class to analyze
+     * @param accessible make fields accessible
+     * @return all class fields
+     */
+    public static Field[] getAllDeclaredFields(Class<?> cls, boolean accessible) {
+        List<Field> fields = new ArrayList<>();
+        while (cls != null) {
+            fields.addAll(Arrays.asList(cls.getDeclaredFields()));
+            cls = cls.getSuperclass();
+        }
 
-    return fields.toArray(new Field[fields.size()]);
-  }
+        if (accessible)
+            fields.forEach(field -> field.setAccessible(true));
+
+        return fields.toArray(Field[]::new);
+    }
 }

@@ -34,7 +34,7 @@ public class JAXRS2Profile extends Feign.Builder {
     }
 
     @Override
-    public JAXRS2Profile encoder(Encoder encoder){
+    public JAXRS2Profile encoder(Encoder encoder) {
         super.encoder(new BeanParamEncoder(encoder));
         return this;
     }

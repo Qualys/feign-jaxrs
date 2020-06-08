@@ -57,7 +57,7 @@ class BeanParamTransformer implements Param.Expander {
     public Map<String, Object> transform(Object[] argv) {
         Object param = argv[index];
         try {
-            Map<String, Object> mapped = new HashMap<String, Object>();
+            Map<String, Object> mapped = new HashMap<>();
             for (int i = 0; i < names.length; i++) {
                 Object value = fields[i] != null ? fields[i].get(param) : getters[i].invoke(param);
                 for (String name : names[i])
@@ -65,7 +65,6 @@ class BeanParamTransformer implements Param.Expander {
             }
 
             return mapped;
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -82,8 +81,6 @@ class BeanParamTransformer implements Param.Expander {
     public Collection<String> headerParams() {
         return params.get(HeaderParam.class);
     }
-
-
 
     public String expand(Object value) {
         throw new IllegalStateException("Not implemented");
