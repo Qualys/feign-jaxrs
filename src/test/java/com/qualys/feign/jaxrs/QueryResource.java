@@ -27,6 +27,8 @@ public interface QueryResource {
     @GET String withParam(@BeanParam QueryParamBean bean);
     @GET @Path("headers") String withHeader(@BeanParam HeaderBeanParam bean);
     @GET @Path("{id}") String withPath(@BeanParam PathBeanParam path);
+    @GET @Path("path1/{id1}/path2/{id2}") String withMixed(@PathParam("id1") int id, @QueryParam("param1") String param,
+                                                           @HeaderParam("header1") String header, @BeanParam MixedBeanParam bean);
 
     class QueryParamBean {
         @QueryParam("one") String param1;
@@ -70,6 +72,36 @@ public interface QueryResource {
 
         public void setId(int id) {
             this.id = id;
+        }
+    }
+
+    class MixedBeanParam {
+        @PathParam("id2") int id;
+        @QueryParam("param2") String param;
+        @HeaderParam("header2") String header;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getParam() {
+            return param;
+        }
+
+        public void setParam(String param) {
+            this.param = param;
+        }
+
+        public String getHeader() {
+            return header;
+        }
+
+        public void setHeader(String header) {
+            this.header = header;
         }
     }
 }
