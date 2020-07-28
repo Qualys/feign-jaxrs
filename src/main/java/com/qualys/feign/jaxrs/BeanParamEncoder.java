@@ -23,7 +23,7 @@ import feign.codec.EncodeException;
 import feign.codec.Encoder;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
 
 /**
  * Created by sskrla on 10/12/15.
@@ -55,7 +55,7 @@ class BeanParamEncoder implements Encoder {
             }
 
             RequestTemplate resolvedTemplate = template.resolve(ctx.values);
-            template.uri(resolvedTemplate.url());
+            template.uri(ResolvedUrlUtil.getUnresolvedUrl(template, resolvedTemplate));
             template.headers(resolvedTemplate.headers());
         } else {
             this.delegate.encode(object, bodyType, template);

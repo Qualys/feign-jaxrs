@@ -29,25 +29,24 @@ import spock.lang.Specification
 class BeanParamTest extends Specification {
     Request sent
     def client = Feign.builder()
-        .encoder(new BeanParamEncoder())
-        .invocationHandlerFactory(new BeanParamInvocationHandlerFactory())
-        .contract(new JAXRS2Contract())
-        .client(new Client() {
-            @Override
-            Response execute(Request request, Request.Options options) throws IOException {
-                sent = request
-                Response.builder().request(request).status(200).reason("OK").headers([:]).body(new byte[0]).build()
-            }
-        })
-        .target(QueryResource, "http://localhost")
+            .encoder(new BeanParamEncoder())
+            .invocationHandlerFactory(new BeanParamInvocationHandlerFactory())
+            .contract(new JAXRS2Contract())
+            .client(new Client() {
+                @Override
+                Response execute(Request request, Request.Options options) throws IOException {
+                    sent = request
+                    Response.builder().request(request).status(200).reason("OK").headers([:]).body(new byte[0]).build()
+                }
+            })
+            .target(QueryResource, "http://localhost")
 
     def "query params"() {
         when:
         client.withParam(new QueryResource.QueryParamBean(param1: "one", param2: "two"))
 
         then:
-        sent.url().contains("one=one")
-        sent.url().contains("two=two")
+        sent.url() == "http://localhost/?one=one&two=two"
     }
 
     def "null param not sent"() {
@@ -55,8 +54,7 @@ class BeanParamTest extends Specification {
         client.withParam(new QueryResource.QueryParamBean(param1: "one"))
 
         then:
-        sent.url().contains("one=one")
-        !sent.url().contains("two=two")
+        sent.url() == "http://localhost/?one=one"
     }
 
     def "header param"() {
@@ -64,6 +62,7 @@ class BeanParamTest extends Specification {
         client.withHeader(new QueryResource.HeaderBeanParam(testParam: "ing"))
 
         then:
+        sent.url() == "http://localhost/headers"
         sent.headers().get("test")[0] == "ing"
     }
 
@@ -73,5 +72,23 @@ class BeanParamTest extends Specification {
 
         then:
         sent.url() == "http://localhost/42"
+    }
+
+    def "mixed param"() {
+        when:
+        client.withMixed(5, "one", "headerOne", new QueryResource.MixedBeanParam(id: 10, param: "two", header: "headerTwo"))
+
+        then:
+        sent.url() == "http://localhost/path1/5/path2/10?param2=two&param1=one"
+        sent.headers().get("header1")[0] == ("headerOne")
+        sent.headers().get("header2")[0] == ("headerTwo")
+    }
+
+    def "mixed param only path"() {
+        when:
+        client.withMixed(5, null, null, new QueryResource.MixedBeanParam(id: 10))
+
+        then:
+        sent.url() == "http://localhost/path1/5/path2/10"
     }
 }
