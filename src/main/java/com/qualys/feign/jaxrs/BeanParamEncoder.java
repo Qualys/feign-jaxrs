@@ -21,9 +21,9 @@ package com.qualys.feign.jaxrs;
 import feign.RequestTemplate;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
-
+import feign.template.*;
 import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by sskrla on 10/12/15.
@@ -54,11 +54,31 @@ class BeanParamEncoder implements Encoder {
                     template.header(name, String.valueOf(ctx.values.get(name)));
             }
 
-            RequestTemplate resolvedTemplate = template.resolve(ctx.values);
-            template.uri(ResolvedUrlUtil.getUnresolvedUrl(template, resolvedTemplate));
-            template.headers(resolvedTemplate.headers());
+            resolve(template, ctx.values);
         } else {
             this.delegate.encode(object, bodyType, template);
         }
+    }
+
+    private void resolve(RequestTemplate mutable, Map<String, Object> variables) {
+        JaxrsUriTemplate uriTemplate = JaxrsUriTemplate.create(mutable.url(), !mutable.decodeSlash(),
+                mutable.requestCharset());
+
+        /// escape opening curly brace before expand
+        variables.forEach((key, value) -> {
+            if (value instanceof String) {
+                String escapedValue = ((String) value).replace("{", "%7B");
+                variables.put(key, escapedValue);
+            }
+        });
+
+        String expanded = uriTemplate.expand(variables);
+
+        /// unescape opening curly brace and params after expand
+        if (expanded != null) {
+            expanded = expanded.replaceAll("%7B(\\w+)%7D", "{$1}").replace("%257B", "%7B");
+        }
+
+        mutable.uri(expanded);
     }
 }
