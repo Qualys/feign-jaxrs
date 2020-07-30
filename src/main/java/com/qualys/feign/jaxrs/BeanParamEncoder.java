@@ -24,6 +24,7 @@ import feign.codec.Encoder;
 import feign.template.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by sskrla on 10/12/15.
@@ -60,6 +61,8 @@ class BeanParamEncoder implements Encoder {
         }
     }
 
+    private static final Pattern ESCAPED_CURLY_BRACES = Pattern.compile("%7B(\\w+)%7D");
+
     private void resolve(RequestTemplate mutable, Map<String, Object> variables) {
         JaxrsUriTemplate uriTemplate = JaxrsUriTemplate.create(mutable.url(), !mutable.decodeSlash(),
                 mutable.requestCharset());
@@ -76,7 +79,7 @@ class BeanParamEncoder implements Encoder {
 
         /// unescape opening curly brace and params after expand
         if (expanded != null) {
-            expanded = expanded.replaceAll("%7B(\\w+)%7D", "{$1}").replace("%257B", "%7B");
+            expanded = ESCAPED_CURLY_BRACES.matcher(expanded).replaceAll("{$1}").replace("%257B", "%7B");
         }
 
         mutable.uri(expanded);
