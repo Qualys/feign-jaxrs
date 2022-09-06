@@ -47,6 +47,6 @@ final class ReflectionUtil {
         if (accessible)
             fields.forEach(field -> field.setAccessible(true));
 
-        return fields.toArray(Field[]::new);
+        return fields.toArray(new Field[0]);
     }
 }

@@ -25,6 +25,9 @@
     <version>2.1-SNAPSHOT</version>
 
     <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <feign.version>10.10.1</feign.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven.javadoc.version>3.2.0</maven.javadoc.version>
@@ -147,8 +150,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <target>11</target>
-                    <source>11</source>
+                    <target>${maven.compiler.target}</target>
+                    <source>${maven.compiler.source}</source>
                 </configuration>
             </plugin>
             <plugin>
